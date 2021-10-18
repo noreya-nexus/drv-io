@@ -1,0 +1,30 @@
+name: Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  Test:
+
+    runs-on: ubuntu-latest
+    container: rust:latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependency
+      run: cargo install cargo2junit
+    - name: Test driver library and export results
+      run: cargo test -p nexus_unity_sdbp -- -Z unstable-options --format json --report-time | cargo2junit > results.xml
+    - name: Test driver library for failure
+      run: cargo test -p nexus_unity_sdbp
+    - name: Publish test result
+      uses: EnricoMi/publish-unit-test-result-action@v1
+      if: always()
+      with:
+        files: results.xml

@@ -1,0 +1,22 @@
+[package]
+name = "nexus-drv-io"
+version = "0.9.0"
+authors = ["Richard Schleich <rs@noreya.tech>", "Philipp Polzhofer <pp@noreya.tech>"]
+edition = "2018"
+license = "GPL-3.0-only"
+
+
+#[[test]]
+#name = "nexus_api_tests"
+#path = "tests/api_tests.rs"
+
+
+[dependencies]
+crossbeam-channel = "0.4.2"
+pretty_env_logger = "0.4.0"
+log = "0.4.8"
+signal-hook = "0.1.13"
+hex = "0.4.3"
+nexus_unity_sdbp = { package = "nexus_unity_sdbp", git = "https://github.com/nexus-unity/rustlib-nexus-unity-sdbp.git", version = "0.9.*", features = ["io", "power-mgmt"] }
+#nexus_unity_sdbp = { package = "nexus_unity_sdbp", git = "ssh://git@git.intern.noreya.tech/module-driver/libs/nexus.git", version = "0.9.*" }
+#nexus_unity_sdbp = { package = "nexus_unity_sdbp"        , path = "../../nexus_unity_sdbp"        }
