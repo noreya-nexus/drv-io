@@ -10,9 +10,9 @@ The driver handles basic functions like module discovery and deployment as well 
 Other applications can use the interface to make high-performance use of the module functions.
 
 **The API not yet finally released.**  
-The only application using the UDS-API is the [rest-io driver](https://github.com/nexus-unity/rest-io-driver) which provides a [HTTP RESTful API](https://doc.nexus-unity.com/en/module-restful-api/io-module/).  
+The only application using the UDS-API is the [rest-io driver](https://github.com/nexus-unity/rest-io) which provides a [HTTP RESTful API](https://doc.nexus-unity.com/en/module-restful-api/io-module/).  
 It is recommended to use the HTTP RESTful API for applications (network and local) as it is stable and finalized.  
-If you still want to use the API you should check the source code of the [rest-io driver](https://github.com/nexus-unity/rest-io-driver).  
+If you still want to use the API you should check the source code of the [rest-io driver](https://github.com/nexus-unity/rest-io).  
 
 Most of the functionality is in the [nexus-unity-sdbp](https://github.com/nexus-unity/rustlib-nexus-unity-sdbp) lib.
 
