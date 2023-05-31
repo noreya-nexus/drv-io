@@ -1,15 +1,13 @@
-#[macro_use] extern crate log;
-
 use std::time::Duration;
 
 pub mod settings;
-mod service;
-mod notification_handler;
 
-use nexus_unity_sdbp::datatypes::*;
+use noreya_sdbp::datatypes::*;
 use std::thread::sleep;
-use nexus_unity_sdbp::drv::core::{DeviceFilter, SharedStats, Stats, DeviceHandler, Dispatcher, Controller, DrvMeta, UdsServer};
-use nexus_unity_sdbp::util::{ManagedThreadHandle, spawn, ChannelPair, ManagedThreadState};
+use noreya_sdbp::drv::core::{DeviceFilter, SharedStats, Stats, DeviceHandler, Dispatcher, Controller, DrvMeta, UdsServer};
+use noreya_sdbp::drv::service::service::SdbpModule;
+use noreya_sdbp::util::{ManagedThreadHandle, spawn, ChannelPair, ManagedThreadState};
+use crate::settings::{COMPATIBLE_FW_MAJOR, COMPATIBLE_FW_MINOR};
 
 pub fn start() -> ManagedThreadHandle<()> {
 
@@ -39,7 +37,7 @@ pub fn start_driver(ctl_chn: ChannelPair<ManagedThreadState>) {
 
     let device_handler = DeviceHandler::start(filter, devt_receiver.clone(), devt_sender.clone());
     let dispatcher = Dispatcher::start();
-    let controller = Controller::start(dispatcher.get_com(), devt_receiver.clone(), shared.clone(), service::IoModule::handle_function);
+    let controller = Controller::start(dispatcher.get_com(), devt_receiver.clone(), shared.clone(), SdbpModule::handle_function, COMPATIBLE_FW_MAJOR, COMPATIBLE_FW_MINOR);
 
     let meta = DrvMeta::new(settings::MODULE_NAME.to_string(), settings::DRV_NAME.to_string(), settings::SOCKET_PATH.to_string());
     let udsserver = UdsServer::start(meta, dispatcher.get_com(), shared.clone());

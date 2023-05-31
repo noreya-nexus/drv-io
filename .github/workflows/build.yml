@@ -15,6 +15,10 @@ jobs:
     container: rust:latest
 
     steps:
+    - name: Update cache
+      run: DEBIAN_FRONTEND="noninteractive" apt-get update
+    - name: Install apt packages
+      run: DEBIAN_FRONTEND="noninteractive" apt-get install -y libudev-dev
     - uses: actions/checkout@v2
     - name: Build project
       run: cargo build --all --verbose

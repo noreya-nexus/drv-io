@@ -1,0 +1,64 @@
+[Unit]
+Description=IO Module Driver
+StartLimitIntervalSec=0
+
+[Service]
+Type=notify
+Environment=RUST_APP_LOG="info"
+Environment=MAX_SCLK_SPEED_KHZ=16000
+RuntimeDirectory=nexus-drv-io
+ExecStart=/usr/bin/nexus-drv-io
+MemoryMax=10M
+MemorySwapMax=0
+CPUSchedulingPolicy=rr
+#CPUSchedulingPriority= 1-100 higher=better
+CPUSchedulingPriority=80
+IOSchedulingClass=realtime
+#IOSchedulingPriority= 0-7 lower=better
+IOSchedulingPriority=2
+IOAccounting=yes
+#IOWeight= default is 100, higher=better
+IOWeight=200
+User=sdbp
+Group=sdbp
+Restart=on-failure
+RestartSec=10s
+
+ReadWritePaths=/sys/class/sdbp/ /sys/devices/virtual/sdbp/
+DevicePolicy=closed
+DeviceAllow=char-serial_device_bus_protocol
+# Does not affect real time settings of service
+RestrictRealtime =  yes
+# systemd-analyze security check does not work for UMask
+UMask=0027
+#PrivateDevices = no # Not possible and handled by DeviceAllow
+#RestrictAddressFamilies=~AF_NETLINK # Not applicable
+#RestrictAddressFamilies=~AF_UNIX # Not applicable
+#RootDirectory=/RootImage= # Not applicable
+#PrivateNetwork = yes # Does not work with udev events
+PrivateTmp = yes
+NoNewPrivileges = yes
+ProtectSystem = strict
+ProtectHome = yes
+ProtectKernelModules = yes
+ProtectKernelLogs = yes
+ProtectKernelTunables = yes
+ProtectControlGroups = yes
+RestrictAddressFamilies = AF_UNIX AF_NETLINK
+RestrictNamespaces = yes
+RestrictSUIDSGID = yes
+PrivateUsers = yes
+ProtectClock = yes
+ProtectProc = invisible
+ProcSubset = pid
+LockPersonality = yes
+MemoryDenyWriteExecute = yes
+RemoveIPC = yes
+ProtectHostname=yes
+IPAddressDeny=any
+SystemCallArchitectures=native
+SystemCallFilter=@basic-io @network-io @file-system @process @signal @io-event sigaction madvise mprotect sched_getaffinity ioctl getrandom
+CapabilityBoundingSet=
+
+[Install]
+WantedBy=multi-user.target

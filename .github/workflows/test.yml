@@ -17,12 +17,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Update cache
+      run: DEBIAN_FRONTEND="noninteractive" apt-get update
+    - name: Install apt packages
+      run: DEBIAN_FRONTEND="noninteractive" apt-get install -y libudev-dev
     - name: Install dependency
       run: cargo install cargo2junit
     - name: Test driver library and export results
-      run: cargo test -p nexus_unity_sdbp -- -Z unstable-options --format json --report-time | cargo2junit > results.xml
+      run: cargo test -p noreya_sdbp -- -Z unstable-options --format json --report-time | cargo2junit > results.xml
     - name: Test driver library for failure
-      run: cargo test -p nexus_unity_sdbp
+      run: cargo test -p noreya_sdbp
     - name: Publish test result
       uses: EnricoMi/publish-unit-test-result-action@v1
       if: always()

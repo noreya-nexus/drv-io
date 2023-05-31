@@ -2,8 +2,8 @@ use std::io::{Error, ErrorKind};
 use std::thread::sleep;
 use std::time::{Duration, Instant};
 
-use nexus_unity_sdbp::datatypes::Descriptor;
-use nexus_unity_sdbp::drv::core::SharedStats;
+use noreya_sdbp::datatypes::Descriptor;
+use noreya_sdbp::drv::core::SharedStats;
 
 pub struct PowerMgmtHelper {
     slot: u16,

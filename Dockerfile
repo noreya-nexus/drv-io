@@ -1,9 +1,9 @@
-FROM debian:buster
+FROM debian:bullseye
   
 RUN groupadd --gid 1000 jenkins && useradd -rm -d /home/jenkins -s /bin/bash -g root -G sudo -u 1000 -g 1000 jenkins
 
 RUN apt-get update
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y devscripts quilt chrpath git wget apt-utils tzdata debhelper
+RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y devscripts quilt chrpath git wget apt-utils tzdata debhelper libudev-dev
 
 # For rust projects
 # From https://github.com/rust-lang/docker-rust/blob/77e77508828ca2da1a9b7582d079b2d77f8b9a1a/1.52.1/buster/Dockerfile
@@ -26,19 +26,17 @@ RUN set -eux; \
     echo "${rustupSha256} *rustup-init" | sha256sum -c -; \
     chmod +x rustup-init; \
     ./rustup-init -y --no-modify-path --profile minimal --default-toolchain $RUST_VERSION --default-host ${rustArch} --target x86_64-unknown-linux-gnu; \
-    rustup target add armv7-unknown-linux-gnueabihf --toolchain stable; \
+    rustup target add aarch64-unknown-linux-gnu --toolchain stable; \
     rustup install nightly; \
-    rustup target add armv7-unknown-linux-gnueabihf --toolchain nightly; \
     rm rustup-init; \
     chmod -R a+w $RUSTUP_HOME $CARGO_HOME; \
     rustup --version; \
     cargo --version; \
     rustc --version;
 # For root user
-RUN mkdir /.cargo && echo "[target.armv7-unknown-linux-gnueabihf]" >> /.cargo/config && echo linker = \"arm-linux-gnueabihf-gcc\" >> /.cargo/config
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y gcc-arm-linux-gnueabihf libssl-dev pkg-config
+RUN mkdir /.cargo && echo "[target.aarch64-unknown-linux-gnu]" >> /.cargo/config && echo linker = \"aarch64-linux-gnu-gcc\" >> /.cargo/config
+RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y gcc-aarch64-linux-gnu libssl-dev pkg-config
 WORKDIR /home/jenkins
 USER jenkins
 # For jenkins user
-RUN mkdir .cargo && echo "[target.armv7-unknown-linux-gnueabihf]" >> .cargo/config && echo linker = \"arm-linux-gnueabihf-gcc\" >> .cargo/config
-
+RUN mkdir .cargo && echo "[target.aarch64-unknown-linux-gnu]" >> .cargo/config && echo linker = \"aarch64-linux-gnu-gcc\" >> .cargo/config
